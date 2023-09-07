@@ -1,3 +1,5 @@
+![App Screenshot](form.PNG)
+
 # Feedback Form Project
 
 A feedback form application built using React 18 for the frontend, Node.js with Express for the backend, and the Notion API for the database.
