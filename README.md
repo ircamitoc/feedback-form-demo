@@ -115,7 +115,7 @@ Visit `http://localhost:3000` in your browser to access the application.
 
 Contributions are welcome! Feel free to open issues or submit pull requests to help improve this project.
 
-## License
+# License
 
 This project is licensed under the GNU General Public License version 3.0 (GPL-3.0). See the [LICENSE](LICENSE) file for details.
 
