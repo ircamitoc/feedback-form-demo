@@ -2,7 +2,7 @@
 
 # Feedback Form Project
 
-"Feedback Form Demo is a user-friendly web app. It uses React 18 for the front end, Node.js with Express for the back end, and the Notion API to store data."
+A feedback form application built using React 18, Node.js, Express, and the Notion API for the database.
 
 ## Table of Contents
 
