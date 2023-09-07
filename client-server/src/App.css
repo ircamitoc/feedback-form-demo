@@ -1,0 +1,301 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@500&display=swap");
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body {
+  --main-hue: 208;
+  --text-color: #000;
+  --main-color: hsl(var(--main-hue), 92%, 54%);
+  --nav-color: hsl(var(--main-hue), 17%, 79%);
+  --bg-color: #fff;
+  --light-text-color: #9ca7b6;
+  --main-color-hover: hsl(var(--main-hue), 77%, 48%);
+  --input-bg: hsla(var(--main-hue), 50%, 50%, 6.5%);
+  --input-bg-hover: hsla(var(--main-hue), 50%, 50%, 14%);
+  --input-text: #8c9aaf;
+  --light-main-color: hsl(var(--main-hue), 91%, 55%);
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  background: rgb(2, 0, 36);
+  background: linear-gradient(
+    90deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+}
+
+.container {
+  max-width: 700px;
+  width: 100%;
+  background-color: #fff;
+  box-shadow: 10px 10px 1px 2px rgba(23, 26, 26, 0.6);
+  padding: 25px 30px;
+  border-radius: 30px;
+  /* Added margin for better spacing on smaller screens */
+  margin: 0 auto;
+}
+
+.container .contact-heading {
+  font-size: 40px;
+  font-weight: 600;
+  position: relative;
+  /* Adjusted spacing for smaller screens */
+  margin-bottom: 20px;
+  text-align: center; /* Center the text */
+}
+
+.container .contact-heading span {
+  color: #00d4ff;
+}
+
+.container .contact-heading::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  height: 3px;
+  width: 100px;
+  background: linear-gradient(
+    135deg,
+    rgba(2, 0, 36, 1) 0%,
+    rgba(9, 9, 121, 1) 35%,
+    rgba(0, 212, 255, 1) 100%
+  );
+  transform: translateX(-50%); /* Center the line */
+}
+
+.container form .input-wrap {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.contact-form {
+  display: grid;
+  grid-template-columns: 1fr; /* Single column layout for all screen sizes */
+  column-gap: 2rem;
+  row-gap: 1rem;
+}
+
+.input-wrap.w-100 {
+  grid-column: span 1; /* Span one column for all screen sizes */
+}
+
+form .input-wrap .contact-input {
+  width: 100%;
+  background-color: var(--input-bg);
+  padding: 1.5rem 1.35rem calc(0.75rem - 2px) 1.35rem;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  border-radius: 20px;
+  color: var(--text-color);
+  font-weight: 600;
+  font-size: 0.95rem;
+  border: 2px solid transparent;
+  box-shadow: 0 0 0 0px var(--input-shadow);
+  transition: 0.3s;
+}
+
+.input-wrap {
+  position: relative;
+}
+
+.contact-input:hover {
+  background-color: var(--input-bg-hover);
+}
+
+.input-wrap label {
+  position: absolute;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  color: var(--light-text-color);
+  pointer-events: none;
+  transition: 0.2s;
+}
+
+.input-wrap .icon {
+  position: absolute;
+  right: calc(1.35rem + 2px);
+  top: 50%;
+  transform: translateY(-50%);
+  pointer-events: none;
+  color: var(--input-text);
+  font-size: 1.25rem;
+}
+
+textarea.contact-input {
+  resize: none;
+  width: 100%;
+  min-height: 150px;
+}
+
+textarea.contact-input ~ label {
+  top: 1.2rem;
+  transform: none;
+}
+
+textarea.contact-input ~ .icon {
+  top: 1.3rem;
+  transform: none;
+}
+
+.input-wrap.focus .contact-input {
+  background-color: var(--bg-color);
+  border: 2px solid var(--light-main-color);
+  box-shadow: 0 0 0 5px hsla(var(--main-hue), 91%, 55% 0.11);
+}
+
+.input-wrap.focus label {
+  color: var(--light-main-color);
+}
+
+.input-wrap.not-empty label {
+  font-size: 0.66rem;
+  top: 0.75rem;
+  transform: translateY(0);
+}
+
+.contact-buttons {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically on smaller screens */
+  align-items: center; /* Center align buttons */
+  margin-top: 1rem;
+}
+
+.btn {
+  /* Adjust button styling as needed */
+  padding: 1.1rem 2rem;
+  background-color: var(--main-color);
+  color: #fff;
+  border-radius: 40px;
+  border: none;
+  font-family: inherit;
+  font-weight: 500;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: 0.25s;
+  width: 100%; /* Make the button full-width */
+  margin-bottom: 1rem; /* Add spacing between buttons */
+}
+
+.btn:hover {
+  background-color: var(--main-color-hover);
+}
+
+/* The container */
+.contact-buttons .check-container {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default checkbox */
+.contact-buttons .check-container input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  background-color: #eee;
+}
+
+/* On mouse-over, add a grey background color */
+.contact-buttons .check-container:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* When the checkbox is checked, add a blue background */
+.contact-buttons .check-container input:checked ~ .checkmark {
+  background-color: #2196f3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+.contact-buttons .check-container .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+.contact-buttons .check-container input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+.contact-buttons .check-container .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.contact-buttons .check-container {
+  font-size: 1rem;
+}
+
+.contact-buttons .check-container a:hover {
+  color: var(--main-color-hover);
+}
+
+.recaptcha-container {
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 30px;
+  }
+
+  .container .contact-heading {
+    font-size: 30px; /* Reduce font size for smaller screens */
+  }
+
+  .container .contact-heading::before {
+    width: 60px; /* Adjust width for smaller screens */
+  }
+
+  .contact-buttons {
+    margin-top: 0.5rem; /* Reduce top margin for smaller screens */
+  }
+}
+
+@media (max-width: 480px) {
+  .container .contact-heading {
+    font-size: 25px; /* Reduce font size for smaller screens */
+  }
+
+  .container .contact-heading::before {
+    width: 40px; /* Adjust width for smaller screens */
+  }
+}
