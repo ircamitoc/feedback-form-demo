@@ -2,7 +2,7 @@
 
 # Feedback Form Project
 
-A feedback form application built using React 18, Node.js, Express, and the Notion API for the database.
+A feedback form application built using **React 18**, **Node.js**, **Express**, and the **Notion API** for the database.
 
 ## Table of Contents
 
