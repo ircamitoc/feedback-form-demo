@@ -30,8 +30,8 @@ const notion = new Client({
 
 // Create a rate limiter to limit the number of requests per minute
 const limiter = rateLimit({
-  windowMs: 60 * 1000, // 1 minute
-  max: 10, // Allow up to 1 request per 1 minute from the same IP
+  windowMs: 55 * 1000, // 1 minute
+  max: 1, // Allow up to 1 request per 1 minute from the same IP
 });
 
 app.use(limiter);
@@ -57,16 +57,10 @@ app.post("/submitFormToNotion", jsonParser, async (req, res) => {
         },
 
         "Email Address": {
-          rich_text: [
-            {
-              text: {
-                content: emailAddress,
-              },
-            },
-          ],
+          email: emailAddress, // emailAddress should be a valid email address string
         },
 
-        "Extra Information": {
+        Feedback: {
           rich_text: [
             {
               text: {
@@ -77,13 +71,9 @@ app.post("/submitFormToNotion", jsonParser, async (req, res) => {
         },
 
         Timestamp: {
-          rich_text: [
-            {
-              text: {
-                content: Timestamp,
-              },
-            },
-          ],
+          date: {
+            start: Timestamp, // Timestamp should be a valid date string in ISO 8601 format, e.g., "2023-09-08"
+          },
         },
       },
     });

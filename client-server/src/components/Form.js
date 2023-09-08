@@ -1,4 +1,4 @@
-import React, { useReducer, useState, useEffect } from "react";
+import React, { useReducer, useState, useEffect, useCallback } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -6,19 +6,11 @@ import { API_URL } from "../config";
 import { RECAPTCHA_KEY } from "../recaptcha";
 import FormField from "./FormField.js";
 
-// Define your action types as constants
+// Define action types as constants
 const UPDATE_FIELD = "UPDATE_FIELD";
 const RESET_FORM = "RESET_FORM";
 
-// Define your initial state
-const initialState = {
-  name: "",
-  emailAddress: "",
-  extraInfo: "",
-  checkboxChecked: false,
-};
-
-// Define your reducer function
+// Define the form reducer function
 const formReducer = (state, action) => {
   switch (action.type) {
     case UPDATE_FIELD:
@@ -30,14 +22,84 @@ const formReducer = (state, action) => {
   }
 };
 
+// Define initial form state
+const initialState = {
+  name: "",
+  emailAddress: "",
+  extraInfo: "",
+  checkboxChecked: false,
+};
+
+// Define a separate function for form submission
+const handleSubmit = async (
+  name,
+  emailAddress,
+  extraInfo,
+  checkboxChecked,
+  captchaVerified,
+  setSubmitting,
+  setRetryCountdown,
+  resetForm
+) => {
+  try {
+    const currentTimestamp = new Date().toISOString();
+    const response = await axios.post(`${API_URL}/submitFormToNotion`, {
+      name,
+      emailAddress,
+      extraInfo,
+      Timestamp: currentTimestamp,
+    });
+
+    if (response.status === 200) {
+      // Reset the form after successful submission
+      toast.success("Form submitted successfully");
+      resetForm();
+    } else {
+      toast.error("Form submission failed");
+      if (response.status === 429) {
+        // Set the retry countdown based on the rate limit reset time
+        const resetTime = new Date(
+          response.headers["x-ratelimit-reset"] * 1000
+        );
+        const currentTime = new Date();
+        const timeUntilReset = Math.max(
+          0,
+          Math.ceil((resetTime - currentTime) / 1000)
+        );
+        setRetryCountdown(timeUntilReset);
+      }
+    }
+  } catch (error) {
+    console.error("Error:", error);
+    if (error.response) {
+      // Handle specific error cases
+      const { status } = error.response;
+
+      if (status === 429) {
+        toast.error("429 - Too Many Requests. Please try again later.");
+        setRetryCountdown(55); // Default retry countdown for rate limiting
+      } else {
+        toast.error("An error occurred. Please try again later.");
+      }
+    } else {
+      // Handle other network or unexpected errors
+      toast.error("Sorry, something went wrong. Please try again later.");
+    }
+  } finally {
+    setSubmitting(false); // Move this line to the finally block
+  }
+};
+
 function Form() {
   const [formState, dispatch] = useReducer(formReducer, initialState);
   const [captchaVisible, setCaptchaVisible] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [autoSubmit, setAutoSubmit] = useState(false);
+  const [retryCountdown, setRetryCountdown] = useState(null);
+  const [captchaVerified, setCaptchaVerified] = useState(false);
 
-  // Destructure formState to access form values
   const { name, emailAddress, extraInfo, checkboxChecked } = formState;
 
-  // Define handleInputFocus and handleInputBlur functions here
   const handleInputFocus = (e) => {
     e.currentTarget.closest(".input-wrap").classList.add("focus");
     e.currentTarget.closest(".input-wrap").classList.add("not-empty");
@@ -52,7 +114,6 @@ function Form() {
 
   const handleFieldChange = (e) => {
     const { name, value, type, checked } = e.target;
-    // Update form state using the UPDATE_FIELD action
     dispatch({ type: UPDATE_FIELD, field: name, value });
 
     if (type === "checkbox") {
@@ -70,11 +131,10 @@ function Form() {
     "yahoo.com",
     "aol.com",
     "msn.com",
-  ]; // Add your allowed domains here
-  const MAX_CHARACTERS = 2000; // Define the maximum character limit
-  const MAX_NAME = 30; // Define the maximum character list
+  ];
 
-  const [submitting, setSubmitting] = useState(false);
+  const MAX_CHARACTERS = 2000;
+  const MAX_NAME = 30;
 
   useEffect(() => {
     // Check if all fields are filled and the checkbox is checked
@@ -85,7 +145,76 @@ function Form() {
     }
   }, [name, emailAddress, extraInfo, checkboxChecked]);
 
-  const handleSubmit = async (e) => {
+  const memoizedHandleSubmit = useCallback(() => {
+    const resetForm = () => {
+      // Reset the form fields to their initial values
+      dispatch({ type: RESET_FORM });
+      // Reset other form-related state as needed
+      setCaptchaVerified(false);
+      setSubmitting(false);
+      setAutoSubmit(false);
+      setRetryCountdown(null);
+    };
+
+    handleSubmit(
+      name,
+      emailAddress,
+      extraInfo,
+      checkboxChecked,
+      captchaVerified,
+      setSubmitting,
+      setRetryCountdown,
+      resetForm
+    );
+  }, [
+    name,
+    emailAddress,
+    extraInfo,
+    checkboxChecked,
+    captchaVerified,
+    setSubmitting,
+    setRetryCountdown,
+  ]);
+
+  useEffect(() => {
+    if (autoSubmit) {
+      memoizedHandleSubmit();
+    }
+  }, [autoSubmit, memoizedHandleSubmit]);
+
+  useEffect(() => {
+    if (retryCountdown !== null && retryCountdown > 0) {
+      const countdownInterval = setInterval(() => {
+        setRetryCountdown((prevCountdown) => prevCountdown - 1);
+      }, 1000);
+
+      return () => {
+        clearInterval(countdownInterval);
+      };
+    } else if (retryCountdown === 0) {
+      if (!submitting && captchaVerified) {
+        // Auto-submit the form only when retryCountdown reaches 0 and the form is not already submitting
+        setAutoSubmit(true);
+      }
+    }
+  }, [retryCountdown, submitting, captchaVerified]);
+
+  const isValidEmail = (email) => {
+    const emailParts = email.split("@");
+    if (emailParts.length !== 2) {
+      return false;
+    }
+
+    const domain = emailParts[1].toLowerCase();
+    return allowedEmailDomains.includes(domain);
+  };
+
+  const onChange = (value) => {
+    // If value is null, it means the user hasn't verified the reCAPTCHA
+    setCaptchaVerified(value !== null);
+  };
+
+  const handleSubmitForm = async (e) => {
     e.preventDefault();
     setSubmitting(true);
 
@@ -128,62 +257,11 @@ function Form() {
       return;
     }
 
-    try {
-      const currentTimestamp = new Date().toString();
-      const response = await axios.post(`${API_URL}/submitFormToNotion`, {
-        name,
-        emailAddress,
-        extraInfo,
-        Timestamp: currentTimestamp,
-      });
-
-      if (response.status === 200) {
-        dispatch({ type: RESET_FORM });
-        console.log("Success!");
-        toast.success("Form submitted successfully");
-      } else {
-        toast.error("Form submission failed");
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      if (error.response) {
-        // Handle specific error cases
-        const { status } = error.response;
-
-        if (status === 429) {
-          toast.error("429 - Too Many Requests. Please try again later.");
-        } else {
-          toast.error("An error occurred. Please try again later.");
-        }
-      } else {
-        // Handle other network or unexpected errors
-        toast.error("Sorry, something went wrong. Please try again later.");
-      }
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  // Function to validate email address
-  const isValidEmail = (email) => {
-    const emailParts = email.split("@");
-    if (emailParts.length !== 2) {
-      return false; // Email should have exactly one "@" symbol
-    }
-
-    const domain = emailParts[1].toLowerCase();
-    return allowedEmailDomains.includes(domain);
-  };
-
-  const [captchaVerified, setCaptchaVerified] = useState(false);
-
-  const onChange = (value) => {
-    // If value is null, it means the user hasn't verified the reCAPTCHA
-    setCaptchaVerified(value !== null);
+    setAutoSubmit(true); // Trigger automatic form submission
   };
 
   return (
-    <form className="contact-form" onSubmit={handleSubmit}>
+    <form className="contact-form" onSubmit={handleSubmitForm}>
       {/* Use formState values and handleFieldChange for form inputs */}
       <FormField
         label="Name"
@@ -241,8 +319,16 @@ function Form() {
           <br />
         </div>
       )}
-      <button type="submit" className="btn" disabled={submitting}>
-        {submitting ? "Submitting..." : "Submit"}
+      <button
+        type="submit"
+        className="btn"
+        disabled={submitting || retryCountdown !== null}
+      >
+        {submitting
+          ? "Submitting..."
+          : retryCountdown !== null
+          ? `Retrying in ${retryCountdown} seconds`
+          : "Submit"}
       </button>
     </form>
   );
