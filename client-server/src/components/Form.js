@@ -295,7 +295,7 @@ function Form() {
       <div className="contact-buttons">
         <label className="check-container">
           <p>
-            I have read and agreed to the{" "}
+            I have read and accepted the{" "}
             <a href="###" target="_blank" rel="noopener noreferrer">
               Privacy Policy
             </a>
