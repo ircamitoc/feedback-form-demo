@@ -1,29 +1,36 @@
-// components/FormField.js
-import React from "react";
+import React, { useState } from "react";
 
-function FormField({ label, name, value, onChange, onFocus, onBlur }) {
-  const isNotEmpty = value !== ""; // Check if the input has a value
+function FormField({ label, name, value, onChange }) {
+  // State to track whether the input is focused or has content
+  const [isFocused, setIsFocused] = useState(false);
 
-  const handleInputFocus = (e) => {
-    e.currentTarget.closest(".input-wrap").classList.add("focus");
-    e.currentTarget.closest(".input-wrap").classList.add("not-empty");
+  // Function to handle input focus
+  const handleInputFocus = () => {
+    setIsFocused(true);
   };
 
-  const handleInputBlur = (e) => {
-    if (e.currentTarget.value === "") {
-      e.currentTarget.closest(".input-wrap").classList.remove("not-empty");
-    }
-    e.currentTarget.closest(".input-wrap").classList.remove("focus");
+  // Function to handle input blur
+  const handleInputBlur = () => {
+    setIsFocused(false);
+  };
+
+  // Function to handle input change
+  const handleInputChange = (e) => {
+    onChange(e); // Propagate the change event
   };
 
   return (
-    <div className={`input-wrap w-100 ${isNotEmpty ? "not-empty" : ""}`}>
+    <div
+      className={`input-wrap w-100 ${
+        isFocused || value ? "not-empty focus" : ""
+      }`}
+    >
       <input
         className="contact-input"
         autoComplete="off"
         name={name}
         type="text"
-        onChange={onChange}
+        onChange={handleInputChange}
         onFocus={handleInputFocus}
         onBlur={handleInputBlur}
         value={value}
