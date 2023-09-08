@@ -55,7 +55,6 @@ const handleSubmit = async (
       toast.success("Form submitted successfully");
       resetForm();
     } else {
-      toast.error("Form submission failed");
       if (response.status === 429) {
         // Set the retry countdown based on the rate limit reset time
         const resetTime = new Date(
@@ -110,6 +109,14 @@ function Form() {
       e.currentTarget.closest(".input-wrap").classList.remove("not-empty");
     }
     e.currentTarget.closest(".input-wrap").classList.remove("focus");
+  };
+
+  const handleTextareaBlur = (e) => {
+    // Set the textarea class back to 'contact-input' onBlur
+    const textarea = e.currentTarget;
+    if (textarea.value === "") {
+      textarea.classList.remove("not-empty");
+    }
   };
 
   const handleFieldChange = (e) => {
@@ -269,7 +276,7 @@ function Form() {
         value={name}
         onChange={handleFieldChange}
         onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
+        onBlur={handleTextareaBlur}
       />
       <FormField
         label="Email Address"
