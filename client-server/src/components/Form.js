@@ -76,7 +76,7 @@ const handleSubmit = async (
       const { status } = error.response;
 
       if (status === 429) {
-        toast.error("429 - Too Many Requests. Please try again later.");
+        toast.error("Error 429. Please try again later.");
         setRetryCountdown(55); // Default retry countdown for rate limiting
       } else {
         toast.error("An error occurred. Please try again later.");
