@@ -49,7 +49,7 @@ cd express_server
 npm install express @notionhq/client cors body-parser
 npm install express-rate-limit
 npm install helmet
-node server.js
+npm start
 ```
 
 ### Configuration
