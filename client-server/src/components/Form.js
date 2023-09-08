@@ -243,7 +243,7 @@ function Form() {
     }
 
     // Check the checkbox's checked property directly on the DOM element
-    const checkbox = document.getElementById("termsConditions");
+    const checkbox = document.getElementById("privacyPolicy");
 
     if (!checkbox || !checkbox.checked) {
       toast.error("Please agree to the Terms and Conditions");
@@ -297,13 +297,13 @@ function Form() {
           <p>
             I have read and agreed to the{" "}
             <a href="###" target="_blank" rel="noopener noreferrer">
-              Terms and Conditions
+              Privacy Policy
             </a>
             .
           </p>
           <input
             type="checkbox"
-            id="termsConditions"
+            id="privacyPolicy"
             name="checkboxChecked"
             checked={checkboxChecked}
             onChange={handleFieldChange}
