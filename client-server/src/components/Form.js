@@ -100,23 +100,17 @@ function Form() {
   const { name, emailAddress, extraInfo, checkboxChecked } = formState;
 
   const handleInputFocus = (e) => {
+    // Add CSS classes to the parent container when focused
     e.currentTarget.closest(".input-wrap").classList.add("focus");
     e.currentTarget.closest(".input-wrap").classList.add("not-empty");
   };
 
   const handleInputBlur = (e) => {
+    // Remove CSS classes from the parent container when blurred
     if (e.currentTarget.value === "") {
       e.currentTarget.closest(".input-wrap").classList.remove("not-empty");
     }
     e.currentTarget.closest(".input-wrap").classList.remove("focus");
-  };
-
-  const handleTextareaBlur = (e) => {
-    // Set the textarea class back to 'contact-input' onBlur
-    const textarea = e.currentTarget;
-    if (textarea.value === "") {
-      textarea.classList.remove("not-empty");
-    }
   };
 
   const handleFieldChange = (e) => {
@@ -282,7 +276,7 @@ function Form() {
         value={name}
         onChange={handleFieldChange}
         onFocus={handleInputFocus}
-        onBlur={handleTextareaBlur}
+        onBlur={handleInputBlur}
       />
       <FormField
         label="Email Address"
@@ -297,11 +291,12 @@ function Form() {
           name="extraInfo"
           autoComplete="off"
           className="contact-input"
+          value={extraInfo}
           onChange={handleFieldChange}
           onFocus={handleInputFocus}
-          onBlur={handleInputBlur}
-          value={extraInfo}
+          onBlur={handleInputBlur} // Check this line
         ></textarea>
+
         <label>Feedback</label>
         <i className="icon fa-solid fa-inbox"></i>
       </div>
