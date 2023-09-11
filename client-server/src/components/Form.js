@@ -133,11 +133,14 @@ function Form() {
   };
 
   const allowedEmailDomains = [
-    "gmail.com",
-    "hotmail.com",
-    "yahoo.com",
-    "aol.com",
-    "msn.com",
+    ".com",
+    ".org",
+    ".net",
+    ".co",
+    ".us",
+    ".edu",
+    ".ph",
+    ".gov",
   ];
 
   const MAX_CHARACTERS = 2000;
@@ -209,11 +212,12 @@ function Form() {
   const isValidEmail = (email) => {
     const emailParts = email.split("@");
     if (emailParts.length !== 2) {
-      return false;
+      return false; // Email should have exactly one "@" symbol
     }
 
     const domain = emailParts[1].toLowerCase();
-    return allowedEmailDomains.includes(domain);
+    const domainExtension = domain.split(".").pop(); // Get the last part of the domain
+    return allowedEmailDomains.includes("." + domainExtension);
   };
 
   const onChange = (value) => {
