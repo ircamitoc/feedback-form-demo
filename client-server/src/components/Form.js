@@ -78,11 +78,8 @@ const handleSubmit = async (
         toast.error("Error 429. Please try again later.");
         setRetryCountdown(55); // Default retry countdown for rate limiting
       } else {
-        toast.error("An error occurred. Please try again later.");
+        toast.error("Sorry, something went wrong. Please try again later.");
       }
-    } else {
-      // Handle other network or unexpected errors
-      toast.error("Sorry, something went wrong. Please try again later.");
     }
   } finally {
     setSubmitting(false); // Move this line to the finally block
