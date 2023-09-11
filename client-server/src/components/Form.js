@@ -141,6 +141,8 @@ function Form() {
     ".edu",
     ".ph",
     ".gov",
+    ".io",
+    ".mil",
   ];
 
   const MAX_CHARACTERS = 2000;
