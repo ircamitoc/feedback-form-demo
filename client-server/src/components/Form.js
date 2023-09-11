@@ -96,17 +96,17 @@ function Form() {
 
   const { name, emailAddress, extraInfo, checkboxChecked } = formState;
 
-  const handleInputFocus = (e) => {
+  function handleInputFocus(e) {
     e.currentTarget.closest(".input-wrap").classList.add("focus");
     e.currentTarget.closest(".input-wrap").classList.add("not-empty");
-  };
+  }
 
-  const handleInputBlur = (e) => {
+  function handleInputBlur(e) {
     if (e.currentTarget.value === "") {
       e.currentTarget.closest(".input-wrap").classList.remove("not-empty");
     }
     e.currentTarget.closest(".input-wrap").classList.remove("focus");
-  };
+  }
 
   const handleFieldChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -155,6 +155,12 @@ function Form() {
       setSubmitting(false);
       setAutoSubmit(false);
       setRetryCountdown(null);
+
+      // Reset the label positioning classes
+      const inputWraps = document.querySelectorAll(".input-wrap");
+      inputWraps.forEach((inputWrap) => {
+        inputWrap.classList.remove("focus", "not-empty");
+      });
     };
 
     handleSubmit(
