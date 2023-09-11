@@ -1,12 +1,12 @@
-const { NOTION_INTEGRATION_TOKEN } = require("./notionKey");
-const { NOTION_DATABASE_ID } = require("./notionDB");
-const rateLimit = require("express-rate-limit");
-const express = require("express");
-const { Client } = require("@notionhq/client");
-const cors = require("cors");
-const bodyParser = require("body-parser");
-const jsonParser = bodyParser.json();
-const helmet = require("helmet"); // Import the helmet middleware
+import { NOTION_INTEGRATION_TOKEN } from "./notionKey";
+import { NOTION_DATABASE_ID } from "./notionDB";
+import rateLimit from "express-rate-limit";
+import express from "express";
+import { Client } from "@notionhq/client";
+import cors from "cors";
+import { json } from "body-parser";
+const jsonParser = json();
+import helmet from "helmet"; // Import the helmet middleware
 
 const app = express();
 
