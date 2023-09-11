@@ -100,13 +100,11 @@ function Form() {
   const { name, emailAddress, extraInfo, checkboxChecked } = formState;
 
   const handleInputFocus = (e) => {
-    // Add CSS classes to the parent container when focused
     e.currentTarget.closest(".input-wrap").classList.add("focus");
     e.currentTarget.closest(".input-wrap").classList.add("not-empty");
   };
 
   const handleInputBlur = (e) => {
-    // Remove CSS classes from the parent container when blurred
     if (e.currentTarget.value === "") {
       e.currentTarget.closest(".input-wrap").classList.remove("not-empty");
     }
@@ -291,12 +289,11 @@ function Form() {
           name="extraInfo"
           autoComplete="off"
           className="contact-input"
-          value={extraInfo}
           onChange={handleFieldChange}
           onFocus={handleInputFocus}
-          onBlur={handleInputBlur} // Check this line
+          onBlur={handleInputBlur}
+          value={extraInfo}
         ></textarea>
-
         <label>Feedback</label>
         <i className="icon fa-solid fa-inbox"></i>
       </div>
