@@ -9,7 +9,6 @@ function FormField({ label, name, value, onChange }) {
     setIsFocused(true);
   };
 
-  // Function to handle input blur
   const handleInputBlur = () => {
     setIsFocused(false);
   };
