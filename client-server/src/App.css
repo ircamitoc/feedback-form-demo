@@ -291,6 +291,10 @@ textarea.contact-input ~ .icon {
 }
 
 @media (max-width: 480px) {
+  .container {
+    max-height: fit-content;
+  }
+
   .container .contact-heading {
     font-size: 25px; /* Reduce font size for smaller screens */
   }
